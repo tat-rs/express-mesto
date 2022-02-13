@@ -29,4 +29,6 @@ app.use((req, res) => {
   res.status(ERROR_CODE_UNDEFINED).send({ message: 'Страница по указанному маршруту не найдена' });
 });
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(PORT);
+});
