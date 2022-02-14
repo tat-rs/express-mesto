@@ -36,7 +36,11 @@ const createCard = (req, res) => {
 const deleteCardById = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      res.status(SUCCESS_CODE_OK).send({ data: card });
+      if (card) {
+        res.status(SUCCESS_CODE_OK).send({ data: card });
+      } else {
+        res.status(ERROR_CODE_UNDEFINED).send({ message: 'Передан несуществующий _id карточки' });
+      }
     })
     .catch((err) => {
       handleError(err, res);

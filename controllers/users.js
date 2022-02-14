@@ -9,7 +9,6 @@ const SUCCESS_CODE_CREATED = 201;
 const optionsOfData = {
   new: true,
   runValidators: true,
-  upsert: true,
 };
 
 const handleError = (err, res) => {
@@ -53,12 +52,16 @@ const createUser = (req, res) => {
 const uptadeUserProfile = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, optionsOfData)
+  if (!req.body.name || !req.body.about) {
+    return res.status(ERROR_CODE_UNDEFINED).send({ message: 'Переданы некорректные данные' });
+  }
+
+  return User.findByIdAndUpdate(req.user._id, { name, about }, optionsOfData)
     .then((user) => {
-      if (req.body.name && req.body.about) {
+      if (user) {
         res.status(SUCCESS_CODE_OK).send({ data: user });
       } else {
-        res.status(ERROR_CODE_NOCORRECT).send({ message: 'Переданы некорректные данные' });
+        res.status(ERROR_CODE_UNDEFINED).send({ message: 'Пользователь с таким id не найден' });
       }
     })
     .catch((err) => {
@@ -69,12 +72,16 @@ const uptadeUserProfile = (req, res) => {
 const uptadeUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar }, optionsOfData)
+  if (!req.body.avatar) {
+    return res.status(ERROR_CODE_UNDEFINED).send({ message: 'Переданы некорректные данные' });
+  }
+
+  return User.findByIdAndUpdate(req.user._id, { avatar }, optionsOfData)
     .then((user) => {
-      if (req.body.avatar) {
+      if (user) {
         res.status(SUCCESS_CODE_OK).send({ data: user });
       } else {
-        res.status(ERROR_CODE_NOCORRECT).send({ message: 'Переданы некорректные данные' });
+        res.status(ERROR_CODE_UNDEFINED).send({ message: 'Пользователь с таким id не найден' });
       }
     })
     .catch((err) => {
