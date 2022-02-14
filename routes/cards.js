@@ -8,7 +8,7 @@ const {
 
 cardRouter.get('/cards', getCards);
 
-cardRouter.post('/cards', express.json(), createCard);
+cardRouter.post('/cards', createCard);
 
 cardRouter.delete('/cards/:cardId', deleteCardById);
 

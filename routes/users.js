@@ -12,10 +12,10 @@ userRouter.get('/users', getUsers);
 
 userRouter.get('/users/:userId', getUserById);
 
-userRouter.post('/users', express.json(), createUser);
+userRouter.post('/users', createUser);
 
-userRouter.patch('/users/me', express.json(), uptadeUserProfile);
+userRouter.patch('/users/me', uptadeUserProfile);
 
-userRouter.patch('/users/me/avatar', express.json(), uptadeUserAvatar);
+userRouter.patch('/users/me/avatar', uptadeUserAvatar);
 
 module.exports = userRouter;
