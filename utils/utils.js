@@ -4,6 +4,8 @@ const ERROR_CODE_DEFAULT = 500;
 const SUCCESS_CODE_OK = 200;
 const SUCCESS_CODE_CREATED = 201;
 
+const SOLT_ROUND = 10;
+
 const handleError = (err, res) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     res.status(ERROR_CODE_NOCORRECT).send({ message: err.message });
@@ -18,5 +20,6 @@ module.exports = {
   ERROR_CODE_DEFAULT,
   SUCCESS_CODE_OK,
   SUCCESS_CODE_CREATED,
+  SOLT_ROUND,
   handleError,
 };

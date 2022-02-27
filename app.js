@@ -2,6 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const {
+  createUser,
+  login,
+} = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
 
 const ERROR_CODE_UNDEFINED = 404;
 
@@ -11,17 +16,13 @@ const { PORT = 3000 } = process.env;
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6208b13b0fd1b5cc4b086d29',
-  };
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
-  next();
-});
+app.post('/signup', createUser);
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-});
+app.post('/signin', login);
+
+app.use(auth);
 
 app.use(userRouter);
 

@@ -3,10 +3,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const {
+  ERROR_CODE_NOCORRECT,
   ERROR_CODE_UNDEFINED,
   ERROR_CODE_DEFAULT,
   SUCCESS_CODE_OK,
   SUCCESS_CODE_CREATED,
+  SOLT_ROUND,
   handleError,
 } = require('../utils/utils');
 
@@ -40,11 +42,15 @@ const createUser = (req, res) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  bcrypt.hash(password, 10)
+  if (!email || !password) {
+    return res.status(ERROR_CODE_NOCORRECT).send({ message: 'Неправильный email или пароль' });
+  }
+
+  return bcrypt.hash(password, SOLT_ROUND)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(SUCCESS_CODE_CREATED).send({ data: user }))
+    .then((createdUser) => res.status(SUCCESS_CODE_CREATED).send({ data: createdUser }))
     .catch((err) => {
       handleError(err, res);
     });
@@ -93,18 +99,17 @@ const uptadeUserAvatar = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
         'some-secret-key',
         { expiresIn: '7d' },
       );
-      res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-        });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      });
       res.send(token);
     })
     .catch((err) => {
