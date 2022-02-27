@@ -6,7 +6,7 @@ const SUCCESS_CODE_CREATED = 201;
 
 const handleError = (err, res) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
-    res.status(ERROR_CODE_NOCORRECT).send({ message: 'Переданы некорректные данные' });
+    res.status(ERROR_CODE_NOCORRECT).send({ message: err.message });
   } else {
     res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка на стороне сервера' });
   }
