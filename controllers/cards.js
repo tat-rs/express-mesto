@@ -28,12 +28,20 @@ const createCard = (req, res) => {
 };
 
 const deleteCardById = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card) {
-        res.status(SUCCESS_CODE_OK).send({ data: card });
-      } else {
+      if (!card) {
         res.status(ERROR_CODE_UNDEFINED).send({ message: 'Передан несуществующий _id карточки' });
+      } else if (String(card.owner) === String(req.user._id)) {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then((deletedCard) => {
+            res.status(SUCCESS_CODE_OK).send({ data: deletedCard });
+          })
+          .catch((err) => {
+            handleError(err, res);
+          });
+      } else {
+        res.status(ERROR_CODE_UNDEFINED).send({ message: 'Нельзя удалять карточки другого пользователя' });
       }
     })
     .catch((err) => {

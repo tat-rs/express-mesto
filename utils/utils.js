@@ -9,7 +9,7 @@ const SOLT_ROUND = 10;
 
 const handleError = (err, res) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
-    res.status(ERROR_CODE_NOCORRECT).send({ message: err.message });
+    res.status(ERROR_CODE_NOCORRECT).send({ message: 'Переданы некорректные данные' });
   } else {
     res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка на стороне сервера' });
   }
