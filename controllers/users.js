@@ -23,6 +23,20 @@ const getUsers = (req, res) => {
     .catch(() => res.status(ERROR_CODE_DEFAULT).send({ message: 'Произошла ошибка на стороне сервера' }));
 };
 
+const getUserMe = (req, res) => {
+  User.findById({ _id: req.user._id })
+    .then((user) => {
+      if (user) {
+        res.status(SUCCESS_CODE_OK).send({ data: user });
+      } else {
+        res.status(ERROR_CODE_UNDEFINED).send({ message: 'Пользователь с таким id не найден' });
+      }
+    })
+    .catch((err) => {
+      handleError(err, res);
+    });
+};
+
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
@@ -121,6 +135,7 @@ const login = (req, res) => {
 
 module.exports = {
   getUsers,
+  getUserMe,
   getUserById,
   createUser,
   uptadeUserProfile,
