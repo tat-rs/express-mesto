@@ -12,7 +12,7 @@ const CardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => validator.isURL(v),
+      validator: (v) => validator.isURL(v, { require_protocol: true }),
       message: 'Введенное значение не является ссылкой',
     },
   },

@@ -1,5 +1,10 @@
 const express = require('express');
 
+const {
+  validateUptadeProfile,
+  validateUptadeAvatar,
+} = require('../middlewares/validation');
+
 const userRouter = express.Router();
 
 const {
@@ -14,8 +19,8 @@ userRouter.get('/users/me', getUserMe);
 
 userRouter.get('/users/:userId', getUserById);
 
-userRouter.patch('/users/me', uptadeUserProfile);
+userRouter.patch('/users/me', validateUptadeProfile, uptadeUserProfile);
 
-userRouter.patch('/users/me/avatar', uptadeUserAvatar);
+userRouter.patch('/users/me/avatar', validateUptadeAvatar, uptadeUserAvatar);
 
 module.exports = userRouter;
