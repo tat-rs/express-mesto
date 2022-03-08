@@ -70,7 +70,11 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((createdUser) => res.status(SUCCESS_CODE_CREATED).send({ data: createdUser }))
+    .then(() => res.status(SUCCESS_CODE_CREATED).send({
+      data: {
+        name, about, avatar, email,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(`Переданы некорректные данные${err.errors.email ? `: ${err.errors.email.message}` : ''}`));
@@ -148,7 +152,7 @@ const login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
       });
-      res.send(token);
+      res.send({ token });
     })
     .catch((err) => {
       next(new UnauthorizatedError(err.message));
